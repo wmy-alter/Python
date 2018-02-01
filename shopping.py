@@ -1,5 +1,9 @@
 #-*-coding:utf-8-*- 
-__author__ = 'wangtq'
+__author__ = 'Aaron2Study'
+'''
+exercise for study python
+a little shopping program
+'''
 
 product = [
     ("Electrical equiment", (("TV", 2000), ("Air-con", 2000), ("Washing-mechine", 3000), ("Refrigerator", 1500))),
