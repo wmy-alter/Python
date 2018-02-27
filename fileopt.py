@@ -2,6 +2,7 @@
 __author__ = "wang"
 
 import json
+import os
 
 def user_input(index):
     if index == 1:
@@ -23,26 +24,36 @@ def gethaproxinfo(backend):
             if newstr == line.strip():
                 flag = True
                 continue
-            if flag and "backend" in line:
+            if flag and line.strip().startswith("backend"):
                 flag = False
-            if flag:
+                break
+            if flag and line.strip():
                 li.append(line)
-    if "\n" in li:
-        li.remove("\n")
     return li
 
 def addhaproxinfo(dic):
     try:
+        has_backend = False
         title = "backend " + dic['backend']
         record_dict = dic['record']
-        conent = "        server " + record_dict['server'] + " " + \
+        content = "        server " + record_dict['server'] + " " + \
                  record_dict['server'] + " weight " + str(record_dict['weight']) + \
-            " maxconn " + str(record_dict['maxconn'])
-        f = open("haprox_backup", 'x')
-        f.close()
-        with open("haprox", 'r') as f1, open("haprox_backup", 'w+') as f2:
+            " maxconn " + str(record_dict['maxconn']) + "\n"
+        with open("haprox", 'r') as f1, open("haprox_backup", 'w') as f2:
             for line in f1:
-                pass
+                if title == line.strip():
+                    has_backend = True
+                    f2.write(line)
+                    f2.write(content)
+                else:
+                    f2.write(line)
+                if has_backend and line.strip() == content.strip():
+                    continue
+            if not has_backend:
+                f2.write("\n")
+                f2.write(title+"\n")
+                f2.write(content)
+                f2.flush()
     except Exception:
         print("Error!")
 
